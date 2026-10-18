@@ -96,7 +96,7 @@ Tests that need `sclang` are skipped when it isn't installed.
 - `sc_render` renders patterns and scores. Live-coding constructs that need a running server (buses, `Routine`s that talk to `s`, effects chains outside a score) belong in `sc_play`, or in a `~score` you build yourself.
 - Every pattern you render must end. An infinite `Pbind` (for example a delay written as `Pbind(\dur, 4)`) makes sclang loop while building the score until the render times out. Cap voices with `Pfindur(seconds, pattern)` and write one-shot delays as `Pbind(\type, \rest, \dur, Pseq([4]))`.
 - Renders are 16-bit stereo WAV.
-- Renders are mixed straight to the output bus. For a reverb or limiter over everything, add a master synth at the tail of group 1 in a `~score`; the idea is `~score.add([0.0, [\\s_new, \\master, 999, 1, 1]])` with a `ReplaceOut` synth).
+- Renders are mixed straight to the output bus. For a reverb or limiter over everything, add a master synth at the tail of group 1 in a `~score`; the idea is `~score.add([0.0, [\s_new, \master, 999, 1, 1]])` with a `ReplaceOut` synth.
 
 ## License
 
