@@ -1,0 +1,23 @@
+{
+  "name": "sclang-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that lets an AI agent make music with SuperCollider: render patterns to WAV offline (with level analysis) and play them in realtime. Works on macOS and Linux.",
+  "type": "module",
+  "bin": { "sclang-mcp": "build/index.js" },
+  "files": ["build", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc && chmod +x build/index.js",
+    "prepare": "npm run build",
+    "test": "npm run build && node --test \"test/*.test.mjs\""
+  },
+  "keywords": ["mcp", "supercollider", "music", "audio", "sclang"],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  }
+}
