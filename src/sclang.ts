@@ -64,10 +64,24 @@ function workDir(): string {
   return mkdtempSync(join(tmpdir(), "sclang-mcp-"));
 }
 
-/** Keeps the useful lines: our own markers and anything sclang reported as an error. */
+/**
+ * Keeps the useful lines: our own markers and anything sclang reported as an error.
+ * Patterns release synths with /n_set even when the synth already freed itself (doneAction: 2),
+ * which sclang reports once per note; those are collapsed into a single count.
+ */
 export function summarizeLog(log: string): string {
-  const lines = log.split("\n").filter((l) => /ERROR|SC_ERROR|WARNING|FAILURE|^\s+(in |Call stack)/i.test(l));
-  return lines.slice(0, 40).join("\n");
+  const nodeGone = /^FAILURE IN SERVER \/n_set Node \d+ not found/;
+  let nodeGoneCount = 0;
+  const lines: string[] = [];
+  for (const l of log.split("\n")) {
+    if (nodeGone.test(l)) nodeGoneCount++;
+    else if (/ERROR|SC_ERROR|WARNING|FAILURE|^\s+(in |Call stack)/i.test(l)) lines.push(l);
+  }
+  const out = lines.slice(0, 40);
+  if (nodeGoneCount) {
+    out.push(`(${nodeGoneCount}x harmless "/n_set Node not found": notes released after the synth had already freed itself)`);
+  }
+  return out.join("\n");
 }
 
 const RENDER_RUNNER = (userFile: string, outPath: string, duration: number, tail: number, sampleRate: number) => `
